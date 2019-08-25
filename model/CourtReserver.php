@@ -22,63 +22,188 @@ Class CourtReserver extends BaseLogicOperator
     {
         //ログイン後、トップページへ遷移
         $this->login($this->reservation_information->account);
-        $this->navigate_top_page();
 
         //対象の設備ページ・日付へ移動
         $this->navigate_target_facility_page($this->reservation_information->facility_name);
-        $this->navigate_to_target_date($this->reservation_information->start_datetime);
+        $this->navigate_to_target_date($this->reservation_information->get_start_date_texts());
 
-        //対象の予約コマをクリック
-        $this->click_reserve_koma();
+        //1コート当たり2コマ、最大4コマずつ再帰的に実行
+        $this->reserve_recursive();
     }
 
-    private function click_reserve_koma()
+    private function reserve_recursive()
     {
 
-        //施設の開始時間を取得
-        /*
-        $start_datetime = $this->get_facility_start_datetime();
-        printf("start %s \n", $start_datetime->format('Y-m-d H:i:s')."\n");
-        $count_datetime = clone $start_datetime;
-        printf("count %s \n", $count_datetime->format('Y-m-d H:i:s')."\n");
-        $end_datetime = clone $start_datetime;
-        $end_datetime = $start_datetime->modify('+'.$this->reservation_information->duration_hour.' hours');
-        printf("end %s \n", $end_datetime->format('Y-m-d H:i:s')."\n");
-            */
+        //対象の予約コマを取得
+        $reserve_target_komas = array();
+        $this->get_reserve_koma($reserve_target_komas);
+
+        //予約コマがまだ存在すれば処理を再帰的に実行
+        if(count($reserve_target_komas) > 0){
+            $this->click_reserve_koma($reserve_target_komas);
+            $this->reserve_recursive();
+        }else{
+            return;
+        }
+        
+    }
+
+    private function get_reserve_koma(&$reserve_target_komas)
+    {
+
+        //予約範囲の時間を取得
+        $from_datetime = $this->reservation_information->reserved_datetime;
+        $end_datetime = $this->reservation_information->get_end_datetime();
+        $interval = $from_datetime->diff($end_datetime);
+
+        $interval_hour = intval($interval->format('h'));
+        switch ($interval_hour) {
+            case 0:
+                return;
+            case 1:
+                $to_datetime = clone($from_datetime)->modify('+1 hour');
+            default:
+                $to_datetime = clone($from_datetime)->modify('+2 hour');
+                break;
+        }
+        
 
         //すべてのコートの該当コマを取得
         for($i = 0; $i < count($this->reservation_information->court_names); $i++)
         {
             
-            //施設の開始時間を取得
-            $count_datetime = $this->get_facility_start_datetime();
-
             //該当コートの行tr,tdを取得
             $tr_element = $this->get_court_name_tr_element($this->reservation_information->court_names[$i]);
+            $td_elements = null;
             $td_elements = $tr_element->findElements(WebDriverBy::tagName('td'));
 
-            //対象のコマに対し予約対象であれば配列に格納
-            for($j = 0; $j < count($td_elements); $j++){
+            $court_name = $tr_element->getText();
+            
+            //施設の開始時間を取得
+            $count_datetime = $this->get_facility_start_datetime();
+            $reserve_court_target_komas = array();
+            for($j = 0; $j < count($td_elements); $j++)
+            {
+                
+                if($td_elements[$j]->getAttribute('class') != 'clsKomaBlank'
+                    && $count_datetime >= $start_datetime
+                    && $count_datetime < $end_datetime){
 
-
+                    $reserve_court_target_komas[count($reserve_court_target_komas)] = $td_elements[$j];
+                
+                }
 
                 $koma_duration = $td_elements[$j]->getAttribute('colspan');
-                $count_datetime->modify('+'.strval($koma_duration * 15).' minute');
-    
-                if($td_elements[$j]->getAttribute('class') == 'clsKomaBlank')
-                    continue;
-
-                /*
-                if($tds[$i]->getAttribute('class') == 'clsKomaBlank')
-                    continue;
-                    */
-    
-    
+                $count_datetime = $count_datetime->modify('+'.strval($koma_duration * 15).' minute');
+                
             }
-            
+            $reserve_target_komas[$court_name] = $reserve_court_target_komas;
+        }
+    }
+
+    private function click_reserve_koma(&$reserve_target_komas)
+    {
+        //取得した対象のコマをカウント
+        $target_koma_count = 0;
+        foreach ($reserve_target_komas as $court_name => $reserve_court_target_komas) {
+            foreach ($reserve_court_target_komas as $koma) {
+                $target_koma_count++;
+            }
         }
 
+        //予約対象コマがなければ処理を終了
+        printf("target_koma_count is %d\n",$target_koma_count);
+        if($target_koma_count == 0){
+            return;
+        }
+        
 
+
+        //取得したコマを1コートあたり2コマ、最大4コマずつクリック
+        $reserved_count = 1;
+        while($reserved_count <= 4){
+            
+            //コートごとに配列を取り出し
+            foreach ($reserve_target_komas as $court_name => $reserve_court_target_komas) {
+
+                //1回あたり4コマの上限に達したら抜ける
+                if($reserved_count > 4){
+                    break;
+                }
+
+                //1コートあたり2コマまでクリック
+                $count_per_court = 0;
+                foreach ($reserve_court_target_komas as $index => $koma) {
+                    
+                    if($count_per_court > 1){
+                        break;
+                    }else{
+                        printf("click ! courtname = $court_name, index = $index, %d,%d\n", $koma->getLocation()->getX(),$koma->getLocation()->getY());
+                        $koma->click();
+                        $count_per_court++;
+                        $reserved_count++;
+                        unset(($reserve_target_komas[$court_name])[$index]);
+                    }
+
+                }
+
+            }
+        }
+
+        //次へボタンをクリック
+        $this->click_by_xpath('/html/body/form/div[2]/div[2]/left/left/table[2]/tbody/tr[2]/td/input[1]');
+        
+        //責任者情報を入力
+        $element = $this->get_element_by_xpath('/html/body/form/div[2]/div/table/tbody/tr/td/table/tbody/tr[6]/td/input');
+        $this->rewrite_text_field($element,$this->reservation_information->representative_kana_name);
+        $element = $this->get_element_by_xpath('/html/body/form/div[2]/div/table/tbody/tr/td/table/tbody/tr[7]/td/input');
+        $this->rewrite_text_field($element,$this->reservation_information->representative_name);
+        $element = $this->get_element_by_xpath('/html/body/form/div[2]/div/table/tbody/tr/td/table/tbody/tr[8]/td/input');
+        $this->rewrite_text_field($element,$this->reservation_information->representative_telnumber);
+        
+        //次へボタンクリック
+        $this->click_by_xpath('/html/body/form/div[2]/table[3]/tbody/tr/td[2]/input[1]');
+
+        //利用目的小分類からソフトテニスをクリック
+        $this->select_by_visible_text('/html/body/form/div[2]/div/table/tbody/tr[2]/td[5]/select[2]', '04：ソフトテニス');
+
+        //次へボタンクリック
+        $this->click_by_xpath('/html/body/form/div[2]/table[3]/tbody/tr/td[2]/table/tbody/tr[2]/td/input');
+
+        //予約ボタンをクリック
+        $this->click_by_xpath('/html/body/form/div[2]/center/center/input[1]');
+        $dialog = $this->_driver->switchTo()->alert();
+        $dialog->accept();
+        $dialog = $this->_driver->switchTo()->alert();
+        $dialog->accept();
+
+        //施設画面へ戻る
+        $this->click_by_xpath('/html/body/form/div[2]/center/table[2]/tbody/tr[2]/td[2]/input');
+
+        //再帰的に呼び出し
+        $this->click_reserve_koma($reserve_target_komas);
+
+        //$element->te
+        //取得したコマを1コートあたり2コマ、最大4コマずつクリック
+        /*for($i = 0; $i < ceil(count($reserve_target_komas) / 4); $i++)
+        {
+            for($j = 0; $j < 4; $j++)
+            {
+                if( ($i * 4 + $j) > count($reserve_target_komas))
+                {
+                    break;
+                }
+                $reserve_target_komas[$i * 4 + $j]->click();
+            }
+
+            //次へボタンをクリック
+            $this->click_by_xpath('/html/body/form/div[2]/div[2]/left/left/table[2]/tbody/tr[2]/td/input[1]');
+            
+            //責任者情報を入力
+            $element = $this->get_element_by_xpath('/html/body/form/div[2]/div/table/tbody/tr/td/table/tbody/tr[6]/td/input');
+            //$element->te
+
+        }*/
     }
 
     private function get_court_name_tr_element(string $court_name)

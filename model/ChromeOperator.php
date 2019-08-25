@@ -5,6 +5,7 @@ use Facebook\WebDriver\Remote\DesiredCapabilities;
 use Facebook\WebDriver\WebDriverExpectedCondition;
 use Facebook\WebDriver\WebDriverBy;
 use Facebook\WebDriver\WebDriverSelect;
+use Facebook\WebDriver\WebDriverKeys;
 
 /**
  * Chrome操作を行う
@@ -164,6 +165,15 @@ class ChromeOperator
 
         }
         
+    }
+
+
+    protected function rewrite_text_field($text_field_element, $text)
+    {
+        $text_field_element->clear();
+        $text_field_element->click();
+        $this->_driver->getKeyboard()->sendKeys($text);
+
     }
 
     public function __destruct()

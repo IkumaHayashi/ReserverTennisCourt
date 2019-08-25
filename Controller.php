@@ -36,7 +36,8 @@ $account = new Account('10008771','1125k');
     */
     
     //予約
-    $reservation_information = new ReservationInformation($account, '木ノ下テニスコート', array('第１コート（クレー）', '第２コート（クレー）'),array('2019','09','28'), 4);
+    $reservation_information = new ReservationInformation($account, '木ノ下テニスコート', array('第１コート（クレー）', '第２コート（クレー）'), new DateTime('2019-09-28 12:30:00'), 4
+                                                         , 'ハヤシ イクマ', '林 郁真', '080-5158-7732');
     $court_reserver = new CourtReserver($server_url,$start_url,$frame_name, $reservation_information);
     $court_reserver->reserve();
     fgets(STDIN);
