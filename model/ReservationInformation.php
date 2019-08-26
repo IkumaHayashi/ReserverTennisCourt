@@ -72,22 +72,36 @@ class ReservationInformation
 
         for($i = 0; $i < ceil($interval_hour / 2); $i++ ){
             
-            $reservation_unit_pair = array();
+
+            $reserve_start_datetime = clone($this->start_datetime);
+            $reserve_start_datetime = $reserve_start_datetime->modify('+'.($i * 2).' hours');
+
+            if( ($i + 1) < ceil($interval_hour / 2)){
+                $reserve_end_datetime = clone($reserve_start_datetime);
+                $reserve_end_datetime = $reserve_end_datetime->modify('+2 hours')->modify('-1 seconds');
+            }else if( ($interval_hour % 2) == 0 ){
+                $reserve_end_datetime = clone($reserve_start_datetime);
+                $reserve_end_datetime = $reserve_end_datetime->modify('+2 hours')->modify('-1 seconds');
+            }else{
+                $reserve_end_datetime = clone($reserve_start_datetime);
+                $reserve_end_datetime = $reserve_end_datetime->modify('+1 hours')->modify('-1 seconds');
+            }
 
             for($j = 0; $j < ceil(count($this->court_names)) / 2; $j++){
 
-                $reserve_date = clone($this->start_datetime)->modify('+'.($j * 2).' hours');
-                $reservation_unit = new ReservationUnit($this->facility_name, $this->court_names[$j * 2], $reserve_date);
+                $reservation_unit_pair = array();
 
+                $reservation_unit = new ReservationUnit($this->facility_name, $this->court_names[$j * 2], $reserve_start_datetime, $reserve_end_datetime);
                 $reservation_unit_pair[0] = $reservation_unit;
 
                 if( ($j * 2 + 1) < count($this->court_names) ){
-                    $reservation_unit = new ReservationUnit($this->facility_name, $this->court_names[$j * 2 + 1], $reserve_date);
+                    $reservation_unit = new ReservationUnit($this->facility_name, $this->court_names[$j * 2 + 1], $reserve_start_datetime, $reserve_end_datetime);
                     $reservation_unit_pair[1] = $reservation_unit;
                 }
-            }
 
-            $this->reservation_units[count($this->reservation_units)] = $reservation_unit_pair;
+                $this->reservation_units[count($this->reservation_units)] = $reservation_unit_pair;
+                
+            }
 
         }
     }

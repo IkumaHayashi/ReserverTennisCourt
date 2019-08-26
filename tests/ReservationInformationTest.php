@@ -9,7 +9,59 @@ class ReservationInformationTest extends TestCase
     /**
      * @test
      */
-    public function コンストラクタのテスト(): void
+    public function コンストラクタのテスト0(): void //TODO: テスト名の見直し
+    {
+        $account = new Account('10008771','1125k');
+        $reservation_information = new ReservationInformation($account
+                                        , '木ノ下テニスコート'
+                                        , array('第１コート（クレー）')
+                                        , new DateTime('2019-09-28 12:30:00'), 1
+                                        , 'ハヤシ イクマ'
+                                        , '林 郁真'
+                                        , '080-5158-7732');
+        
+        $reservation_units = $reservation_information->get_reservation_units();
+        
+
+        $actual_reservation_unit = $reservation_units[0][0];
+        $this->assertEquals('木ノ下テニスコート', $actual_reservation_unit->facility_name);
+        $this->assertEquals('第１コート（クレー）', $actual_reservation_unit->court_name);
+        $this->assertEquals(new Datetime('2019-09-28 12:30:00'), $actual_reservation_unit->start_datetime);
+        $this->assertEquals(new Datetime('2019-09-28 13:29:59'), $actual_reservation_unit->end_datetime);
+    }
+    /**
+     * @test
+     */
+    public function コンストラクタのテスト1_1(): void //TODO: テスト名の見直し
+    {
+        $account = new Account('10008771','1125k');
+        $reservation_information = new ReservationInformation($account
+                                        , '木ノ下テニスコート'
+                                        , array('第１コート（クレー）', '第２コート（クレー）')
+                                        , new DateTime('2019-09-28 12:30:00'), 1
+                                        , 'ハヤシ イクマ'
+                                        , '林 郁真'
+                                        , '080-5158-7732');
+        
+        $reservation_units = $reservation_information->get_reservation_units();
+        
+
+        $actual_reservation_unit = $reservation_units[0][0];
+        $this->assertEquals('木ノ下テニスコート', $actual_reservation_unit->facility_name);
+        $this->assertEquals('第１コート（クレー）', $actual_reservation_unit->court_name);
+        $this->assertEquals(new Datetime('2019-09-28 12:30:00'), $actual_reservation_unit->start_datetime);
+        $this->assertEquals(new Datetime('2019-09-28 13:29:59'), $actual_reservation_unit->end_datetime);
+
+        $actual_reservation_unit = $reservation_units[0][1];
+        $this->assertEquals('木ノ下テニスコート', $actual_reservation_unit->facility_name);
+        $this->assertEquals('第２コート（クレー）', $actual_reservation_unit->court_name);
+        $this->assertEquals(new Datetime('2019-09-28 12:30:00'), $actual_reservation_unit->start_datetime);
+        $this->assertEquals(new Datetime('2019-09-28 13:29:59'), $actual_reservation_unit->end_datetime);
+    }
+    /**
+     * @test
+     */
+    public function コンストラクタのテスト１(): void //TODO: テスト名の見直し
     {
         $account = new Account('10008771','1125k');
         $reservation_information = new ReservationInformation($account
@@ -22,18 +74,109 @@ class ReservationInformationTest extends TestCase
         
         $reservation_units = $reservation_information->get_reservation_units();
         
-    /**
-     * 予約対象範囲を1回の予約可能単位である1コートあたり2コマ、最大4コマで設定する。
-     * ex. 8:30から4時間、第1コート、第2コート、第3コートを指定された場合、下記のように設定する。
-     * [0] => ('第1コート', 08:30), ('第1コート', 09:30), ('第2コート', 08:30), ('第2コート', 09:30)
-     * [1] => ('第1コート', 10:30), ('第1コート', 11:30), ('第2コート', 10:30), ('第2コート', 11:30)
-     * [2] => ('第3コート', 08:30), ('第3コート', 09:30)
-     * [3] => ('第3コート', 100:30), ('第3コート', 11:30)
-     */
+
         $actual_reservation_unit = $reservation_units[0][0];
         $this->assertEquals('木ノ下テニスコート', $actual_reservation_unit->facility_name);
         $this->assertEquals('第１コート（クレー）', $actual_reservation_unit->court_name);
-        $this->assertEquals(new Datetime('2019-09-28 12:30:00'), $actual_reservation_unit->datetime);
+        $this->assertEquals(new Datetime('2019-09-28 12:30:00'), $actual_reservation_unit->start_datetime);
+        $this->assertEquals(new Datetime('2019-09-28 14:29:59'), $actual_reservation_unit->end_datetime);
                                      
+        $actual_reservation_unit = $reservation_units[0][1];
+        $this->assertEquals('木ノ下テニスコート', $actual_reservation_unit->facility_name);
+        $this->assertEquals('第２コート（クレー）', $actual_reservation_unit->court_name);
+        $this->assertEquals(new Datetime('2019-09-28 12:30:00'), $actual_reservation_unit->start_datetime);
+        $this->assertEquals(new Datetime('2019-09-28 14:29:59'), $actual_reservation_unit->end_datetime);
+
+        $actual_reservation_unit = $reservation_units[1][0];
+        $this->assertEquals('木ノ下テニスコート', $actual_reservation_unit->facility_name);
+        $this->assertEquals('第３コート（クレー）', $actual_reservation_unit->court_name);
+        $this->assertEquals(new Datetime('2019-09-28 12:30:00'), $actual_reservation_unit->start_datetime);
+        $this->assertEquals(new Datetime('2019-09-28 14:29:59'), $actual_reservation_unit->end_datetime);
+
+        $this->assertEquals(1, count($reservation_units[1]));
+
+        
+        $actual_reservation_unit = $reservation_units[2][0];
+        $this->assertEquals('木ノ下テニスコート', $actual_reservation_unit->facility_name);
+        $this->assertEquals('第１コート（クレー）', $actual_reservation_unit->court_name);
+        $this->assertEquals(new Datetime('2019-09-28 14:30:00'), $actual_reservation_unit->start_datetime);
+        $this->assertEquals(new Datetime('2019-09-28 16:29:59'), $actual_reservation_unit->end_datetime);
+                                     
+        $actual_reservation_unit = $reservation_units[2][1];
+        $this->assertEquals('木ノ下テニスコート', $actual_reservation_unit->facility_name);
+        $this->assertEquals('第２コート（クレー）', $actual_reservation_unit->court_name);
+        $this->assertEquals(new Datetime('2019-09-28 14:30:00'), $actual_reservation_unit->start_datetime);
+        $this->assertEquals(new Datetime('2019-09-28 16:29:59'), $actual_reservation_unit->end_datetime);
+
+        $actual_reservation_unit = $reservation_units[3][0];
+        $this->assertEquals('木ノ下テニスコート', $actual_reservation_unit->facility_name);
+        $this->assertEquals('第３コート（クレー）', $actual_reservation_unit->court_name);
+        $this->assertEquals(new Datetime('2019-09-28 14:30:00'), $actual_reservation_unit->start_datetime);
+        $this->assertEquals(new Datetime('2019-09-28 16:29:59'), $actual_reservation_unit->end_datetime);
+
+        $this->assertEquals(1, count($reservation_units[3]));
+
+
+    }
+
+    /**
+     * @test
+     */
+    public function コンストラクタのテスト2(): void //TODO: テスト名の見直し
+    {
+        $account = new Account('10008771','1125k');
+        $reservation_information = new ReservationInformation($account
+                                        , '木ノ下テニスコート'
+                                        , array('第１コート（クレー）', '第２コート（クレー）', '第３コート（クレー）')
+                                        , new DateTime('2019-09-28 12:30:00'), 3
+                                        , 'ハヤシ イクマ'
+                                        , '林 郁真'
+                                        , '080-5158-7732');
+        
+        $reservation_units = $reservation_information->get_reservation_units();
+        
+
+        $actual_reservation_unit = $reservation_units[0][0];
+        $this->assertEquals('木ノ下テニスコート', $actual_reservation_unit->facility_name);
+        $this->assertEquals('第１コート（クレー）', $actual_reservation_unit->court_name);
+        $this->assertEquals(new Datetime('2019-09-28 12:30:00'), $actual_reservation_unit->start_datetime);
+        $this->assertEquals(new Datetime('2019-09-28 14:29:59'), $actual_reservation_unit->end_datetime);
+                                     
+        $actual_reservation_unit = $reservation_units[0][1];
+        $this->assertEquals('木ノ下テニスコート', $actual_reservation_unit->facility_name);
+        $this->assertEquals('第２コート（クレー）', $actual_reservation_unit->court_name);
+        $this->assertEquals(new Datetime('2019-09-28 12:30:00'), $actual_reservation_unit->start_datetime);
+        $this->assertEquals(new Datetime('2019-09-28 14:29:59'), $actual_reservation_unit->end_datetime);
+
+        $actual_reservation_unit = $reservation_units[1][0];
+        $this->assertEquals('木ノ下テニスコート', $actual_reservation_unit->facility_name);
+        $this->assertEquals('第３コート（クレー）', $actual_reservation_unit->court_name);
+        $this->assertEquals(new Datetime('2019-09-28 12:30:00'), $actual_reservation_unit->start_datetime);
+        $this->assertEquals(new Datetime('2019-09-28 14:29:59'), $actual_reservation_unit->end_datetime);
+
+        $this->assertEquals(1, count($reservation_units[1]));
+
+        
+        $actual_reservation_unit = $reservation_units[2][0];
+        $this->assertEquals('木ノ下テニスコート', $actual_reservation_unit->facility_name);
+        $this->assertEquals('第１コート（クレー）', $actual_reservation_unit->court_name);
+        $this->assertEquals(new Datetime('2019-09-28 14:30:00'), $actual_reservation_unit->start_datetime);
+        $this->assertEquals(new Datetime('2019-09-28 15:29:59'), $actual_reservation_unit->end_datetime);
+                                     
+        $actual_reservation_unit = $reservation_units[2][1];
+        $this->assertEquals('木ノ下テニスコート', $actual_reservation_unit->facility_name);
+        $this->assertEquals('第２コート（クレー）', $actual_reservation_unit->court_name);
+        $this->assertEquals(new Datetime('2019-09-28 14:30:00'), $actual_reservation_unit->start_datetime);
+        $this->assertEquals(new Datetime('2019-09-28 15:29:59'), $actual_reservation_unit->end_datetime);
+
+        $actual_reservation_unit = $reservation_units[3][0];
+        $this->assertEquals('木ノ下テニスコート', $actual_reservation_unit->facility_name);
+        $this->assertEquals('第３コート（クレー）', $actual_reservation_unit->court_name);
+        $this->assertEquals(new Datetime('2019-09-28 14:30:00'), $actual_reservation_unit->start_datetime);
+        $this->assertEquals(new Datetime('2019-09-28 15:29:59'), $actual_reservation_unit->end_datetime);
+
+        $this->assertEquals(1, count($reservation_units[3]));
+
+
     }
 }
