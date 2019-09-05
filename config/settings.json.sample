@@ -1,0 +1,12 @@
+{
+    "server_url": "http://localhost:4444/wd/hub",
+    "start_url": "https://www.e-reserve.jp/eap-rj/rsv_rj/Core_i/init.asp?KLCD=212019&SBT=1&Target=_Top&LCD=",
+    "frame_name": "MainFrame",
+    "accounts" : [
+        {
+            "id" : "999999999",
+            "name" : "テスト 太郎",
+            "password" : "test"
+        }
+    ]
+}
