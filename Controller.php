@@ -8,7 +8,7 @@ require_once './model/FacilityConditionResercher.php';
 require_once './model/FacilityReservationConfirmer.php';
 require_once './model/ReservationInformation.php';
 require_once './model/CourtReserver.php';
-require_once '../vendor/autoload.php';
+require_once './vendor/autoload.php';
 
 $server_url = 'http://localhost:4444/wd/hub';
 $start_url = 'https://www.e-reserve.jp/eap-rj/rsv_rj/Core_i/init.asp?KLCD=212019&SBT=1&Target=_Top&LCD=';
