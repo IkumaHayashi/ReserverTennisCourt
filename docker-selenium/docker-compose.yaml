@@ -1,0 +1,11 @@
+version: '2'
+#
+services:
+  chrome:
+    container_name: "selenium_chrome"
+    build: StandaloneChromeDebug
+    ports:
+      - '5900:5900'
+      - '4444:4444'
+    volumes:
+      - ../app:/home/seluser/app
