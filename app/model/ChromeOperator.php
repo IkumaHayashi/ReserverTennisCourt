@@ -20,7 +20,7 @@ class ChromeOperator
 
     public function __construct(string $selenium_server_url, string $start_url, string $frame_name)
     {
-        putenv('webdriver.chrome.driver=/bin/chromedriver');
+        putenv('webdriver.chrome.driver=/usr/local/bin/chromedriver');
 
         
 
@@ -56,9 +56,9 @@ class ChromeOperator
 
     protected function navigate($url){
         $this->_driver->get($url);
-        /*if(isset($this->_frame_name) && $this->_frame_name !== ''){
+        if(isset($this->_frame_name) && $this->_frame_name !== ''){
             $this->switch_frame($this->_frame_name);
-        }*/
+        }
     }
 
     protected function switch_frame($framename)

@@ -20,11 +20,12 @@ Class BaseLogicOperator extends ChromeOperator
 
     protected function navigate_target_facility_page($facility_name)
     {
+        $xpath = "/html/body/form/div[2]/div/div[1]/div/div[1]/div[2]/p[1]/input";
         $this->_driver->wait()->until(
-            WebDriverExpectedCondition::visibilityOfElementLocated(WebDriverBy::xpath('//*[@id="contColumnA"]/div[2]/p[1]/input'))
+            WebDriverExpectedCondition::visibilityOfElementLocated(WebDriverBy::xpath($xpath))
         );
         echo("[navigate_target_facility_page] 目的画像をクリック\n");
-        $this->click_by_xpath('//*[@id="contColumnA"]/div[2]/p[1]/input');
+        $this->click_by_xpath($xpath);
 
         
         $this->_driver->wait()->until(
