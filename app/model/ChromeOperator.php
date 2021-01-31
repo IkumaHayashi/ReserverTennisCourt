@@ -22,23 +22,17 @@ class ChromeOperator
     {
         putenv('webdriver.chrome.driver=/usr/local/bin/chromedriver');
 
-        
-
         $this->_selenium_server_url = $selenium_server_url;
         $this->_start_url = $start_url;
         $this->_frame_name = $frame_name;
 
         $options = new ChromeOptions();
-        //$options->addArguments(['--headless']);
         $options->addArguments(['--no-sandbox']);
 
         $caps = DesiredCapabilities::chrome();
         $caps->setCapability(ChromeOptions::CAPABILITY, $options);
         $this->_driver = ChromeDriver::start($caps);
         
-        //$this->_driver = RemoteWebDriver::create($this->_selenium_server_url,DesiredCapabilities::chrome());
-        
-        //$this->_driver->manage()->window()->maximize();
         $this->navigate_top_page();
     }
 
@@ -48,14 +42,16 @@ class ChromeOperator
     }
 
     protected function navigate_top_page(){
-        echo("START navigate_top_page\n");
         $this->navigate($this->_start_url);
-        //echo("START navigate_top_page switch_frame\n");
-        //$this->switch_frame($this->_frame_name);
     }
 
     protected function navigate($url){
         $this->_driver->get($url);
+        $this->switch_main_frome();
+    }
+
+    protected function switch_main_frome()
+    {
         if(isset($this->_frame_name) && $this->_frame_name !== ''){
             $this->switch_frame($this->_frame_name);
         }
@@ -84,7 +80,8 @@ class ChromeOperator
 
     protected function click_by_xpath($xpath)
     {
-        $this->get_element_by_xpath($xpath)->click();
+        $element = $this->get_element_by_xpath($xpath);
+        $element->click();
     }
 
     protected function waitUntilNextElementDisplayed(WebDriverBy $webDriverBy)
@@ -102,6 +99,7 @@ class ChromeOperator
 
         $elements = $parent_element->findElements(WebDriverBy::tagName($tag_name));
         
+        // クラス名で絞り込み
         if($class_name !== ""){
 
             $tmp_elements = array();
@@ -114,8 +112,8 @@ class ChromeOperator
             $elements = $tmp_elements;
             
         }
+        // テキストを含むエレメントを絞り込み
         if($text !== ""){
-
             $tmp_elements = array();
             foreach ($elements as $element) {
                 if(strpos($element->getText(), $text) !== false){
@@ -129,14 +127,18 @@ class ChromeOperator
 
     }
 
+    /**
+     * 一致するクラス名、テキストをクリック。なければエラーを投げる。
+     */
     protected function click_element_by_tag_class_and_text(string $parent_element_xpath, string $tag_name, string $class_name, string $text)
     {
 
         $target_elements = $this->get_elements_by_tag_class_and_text($parent_element_xpath, $tag_name, $class_name, $text);
-
-        if(count($target_elements) == 1){
-            $target_elements[0]->click();
-            return;
+        foreach ($target_elements as $element) {
+            if ($element->getText() === $text) {
+                $element->click();
+                return;
+            }
         }
         throw new \RuntimeException('対象のDOMが取得できない もしくは 複数件見つかりました。');
 

@@ -10,7 +10,7 @@ require_once './model/ReservationInformation.php';
  */
 Class CourtReserver extends BaseLogicOperator
 {
-    private $reservation_information;
+    protected $reservation_information;
 
     public function __construct(string $selenium_server_url, string $start_url, string $frame_name, $reservation_information)
     {
@@ -24,14 +24,14 @@ Class CourtReserver extends BaseLogicOperator
         $this->login($this->reservation_information->account);
 
         //対象の設備ページ・日付へ移動
-        $this->navigate_target_facility_page($this->reservation_information->facility_name);
+        $this->navigate_target_facility_page($this->reservation_information->facility_name, true);
         $this->navigate_to_target_date($this->reservation_information->get_start_date_texts());
 
         //1コート当たり2コマ、最大4コマずつ再帰的に実行
         $this->reserve_recursive();
     }
 
-    private function reserve_recursive()
+    protected function reserve_recursive()
     {
 
         //対象の予約コマを取得
@@ -56,17 +56,17 @@ Class CourtReserver extends BaseLogicOperator
         $end_datetime = $this->reservation_information->get_end_datetime();
         $interval = $from_datetime->diff($end_datetime);
 
-        $interval_hour = intval($interval->format('h'));
+        $interval_hour = intval($interval->format('%h'));
+        $to_datetime = clone $from_datetime;
         switch ($interval_hour) {
             case 0:
                 return;
             case 1:
-                $to_datetime = clone($from_datetime)->modify('+1 hour');
+                $to_datetime->modify('+1 hour');
             default:
-                $to_datetime = clone($from_datetime)->modify('+2 hour');
+                $to_datetime->modify('+2 hour');
                 break;
         }
-        
 
         //すべてのコートの該当コマを取得
         for($i = 0; $i < count($this->reservation_information->court_names); $i++)
@@ -76,18 +76,16 @@ Class CourtReserver extends BaseLogicOperator
             $tr_element = $this->get_court_name_tr_element($this->reservation_information->court_names[$i]);
             $td_elements = null;
             $td_elements = $tr_element->findElements(WebDriverBy::tagName('td'));
-
             $court_name = $tr_element->getText();
             
             //施設の開始時間を取得
             $count_datetime = $this->get_facility_start_datetime();
-            $reserve_court_target_komas = array();
+            $reserve_court_target_komas = array(); 
             for($j = 0; $j < count($td_elements); $j++)
             {
-                
                 if($td_elements[$j]->getAttribute('class') != 'clsKomaBlank'
-                    && $count_datetime >= $start_datetime
-                    && $count_datetime < $end_datetime){
+                    && $count_datetime >= $from_datetime
+                    && $count_datetime < $to_datetime){
 
                     $reserve_court_target_komas[count($reserve_court_target_komas)] = $td_elements[$j];
                 
@@ -151,7 +149,7 @@ Class CourtReserver extends BaseLogicOperator
         }
 
         //次へボタンをクリック
-        $this->click_by_xpath('/html/body/form/div[2]/div[2]/left/left/table[2]/tbody/tr[2]/td/input[1]');
+        $this->click_by_xpath('/html/body/form/div[2]/div[2]/left/table[2]/tbody/tr[2]/td/input[1]');
         
         //責任者情報を入力
         $element = $this->get_element_by_xpath('/html/body/form/div[2]/div/table/tbody/tr/td/table/tbody/tr[6]/td/input');
@@ -168,14 +166,17 @@ Class CourtReserver extends BaseLogicOperator
         $this->select_by_visible_text('/html/body/form/div[2]/div/table/tbody/tr[2]/td[5]/select[2]', '04：ソフトテニス');
 
         //次へボタンクリック
-        $this->click_by_xpath('/html/body/form/div[2]/table[3]/tbody/tr/td[2]/table/tbody/tr[2]/td/input');
+        $this->click_by_xpath('/html/body/form/div[2]/table[3]/tbody/tr[1]/td[2]/input');
 
         //予約ボタンをクリック
         $this->click_by_xpath('/html/body/form/div[2]/center/center/input[1]');
         $dialog = $this->_driver->switchTo()->alert();
         $dialog->accept();
-        $dialog = $this->_driver->switchTo()->alert();
-        $dialog->accept();
+
+        // TODO: 抽選時と予約時でわける？
+        //$dialog = $this->_driver->switchTo()->alert();
+        // $dialog->accept();
+        var_dump("switch_main_frome;");
 
         //施設画面へ戻る
         $this->click_by_xpath('/html/body/form/div[2]/center/table[2]/tbody/tr[2]/td[2]/input');
@@ -209,14 +210,13 @@ Class CourtReserver extends BaseLogicOperator
     private function get_court_name_tr_element(string $court_name)
     {
         //コート名が記載されているthタグを取得
-        $th_tag_elements = $this->get_elements_by_tag_class_and_text('/html/body/form/div[2]/div[2]/left/left/table[3]','th','clsShisetuTitleOneDay', $court_name);
+        $th_tag_elements = $this->get_elements_by_tag_class_and_text('/html/body/form/div[2]/div[2]/left/table[3]/tbody/tr/td/table','th','clsShisetuTitleOneDay', $court_name);
         if($th_tag_elements == null || count($th_tag_elements) == 0 || count($th_tag_elements) > 1){
             throw new \RuntimeException('コート名に対応するth要素が0件もしくは2件以上見つかりました。');
         }
 
         //親の要素を取得
         $tr_element = $th_tag_elements[0]->findElement(WebDriverBy::xpath('..'));
-
         return $tr_element;
     }
 

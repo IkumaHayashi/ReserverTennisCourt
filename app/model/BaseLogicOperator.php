@@ -18,7 +18,7 @@ Class BaseLogicOperator extends ChromeOperator
         $this->click_by_xpath('//*[@id="btnGoTop"]/input');
     }
 
-    protected function navigate_target_facility_page($facility_name)
+    protected function navigate_target_facility_page($facility_name, $is_reserve)
     {
         $xpath = "/html/body/form/div[2]/div/div[1]/div/div[1]/div[2]/p[1]/input";
         $this->_driver->wait()->until(
@@ -26,17 +26,26 @@ Class BaseLogicOperator extends ChromeOperator
         );
         echo("[navigate_target_facility_page] 目的画像をクリック\n");
         $this->click_by_xpath($xpath);
-
         
+        // テニスにチェック
         $this->_driver->wait()->until(
             WebDriverExpectedCondition::visibilityOfElementLocated(WebDriverBy::xpath('//*[@id="000040"]'))
         );
         //$this->waitUntilNextElementDisplayed(WebDriverBy::xpath('//*[@id="000040"]'));
         $this->click_by_xpath('//*[@id="000040"]');
-        $this->waitUntilNextElementDisplayed(WebDriverBy::xpath('/html/body/form/div[2]/center/table[2]/tbody/tr/td[3]/div/input[1]'));
 
+        // 所在地を指定せっずに検索にチェック
+        $this->waitUntilNextElementDisplayed(WebDriverBy::xpath('/html/body/form/div[2]/center/table[2]/tbody/tr/td[3]/div/input[1]'));
         $this->click_by_xpath('/html/body/form/div[2]/center/table[2]/tbody/tr/td[3]/div/input[1]');
-        $this->click_by_xpath('/html/body/form/div[2]/center/table[4]/tbody/tr/td/table/tbody/tr[1]/td[2]/input');
+
+        // 予約ボタンをクリック
+        if ($is_reserve) {
+            $this->click_by_xpath('/html/body/form/div[2]/center/table[4]/tbody/tr/td/table/tbody/tr[1]/td[2]/input');
+        } else {
+            $this->click_by_xpath('/html/body/form/div[2]/center/table[4]/tbody/tr/td/table/tbody/tr[1]/td[3]/input');
+        }
+        
+        // 対象の施設に移動
         $this->select_by_visible_text('/html/body/form/div[2]/div[2]/left/table/tbody/tr[1]/td/select', $facility_name);
         
     }
@@ -45,11 +54,11 @@ Class BaseLogicOperator extends ChromeOperator
     protected function get_facility_start_datetime()
     {
         //日付を取得
-        $date_th_element = $this->_driver->findElement(WebDriverBy::xpath('/html/body/form/div[2]/div[2]/left/left/table[3]/tbody/tr[1]/td[2]/table/tbody/tr/th[2]'));
+        $date_th_element = $this->_driver->findElement(WebDriverBy::xpath('/html/body/form/div[2]/div[2]/left/table[3]/tbody/tr/td/table/tbody/tr[1]/td[2]/table/tbody/tr/th[2]'));
         $date_text = preg_replace("/（.+?）/", "",$date_th_element->getText());
 
         //時間を取得
-        $start_time_td_element = $this->_driver->findElement(WebDriverBy::xpath('/html/body/form/div[2]/div[2]/left/left/table[3]/tbody/tr[2]/td[1]'));
+        $start_time_td_element = $this->_driver->findElement(WebDriverBy::xpath('/html/body/form/div[2]/div[2]/left/table[3]/tbody/tr/td/table/tbody/tr[2]/td[1]'));
         $time_text = $start_time_td_element->getText();
         
         //DateTime型にして返す
@@ -72,10 +81,7 @@ Class BaseLogicOperator extends ChromeOperator
             $target_elements[0]->click();
         }
         //日を移動
-        $target_elements = $this->get_elements_by_tag_class_and_text('/html/body/form/div[2]/div[1]/center/table[4]', 'a', '', ltrim($target_date_texts[2], '0'));
-        if(count($target_elements) == 1){
-            $target_elements[0]->click();
-        }
+        $this->click_element_by_tag_class_and_text('/html/body/form/div[2]/div[1]/center/table[4]', 'a', '', ltrim($target_date_texts[2], '0'));
 
     }
 

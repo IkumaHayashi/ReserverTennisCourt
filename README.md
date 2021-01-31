@@ -17,3 +17,23 @@
 - [composerインストール](https://getcomposer.org/download/)
   - 公式通りコマンド実行
   - パスを通す
+  ```
+  sudo mv composer.phar /usr/local/bin/composer
+  ```
+
+## 開発Tips
+- psysh(REPL)
+  - インストール
+  ```
+  composer g require psy/psysh:@stable
+  ```
+  - 実行
+  ```
+  ~/.composer/vendor/psy/psysh/bin/psysh  
+  ```
+- xdebug
+  - インストール
+  ```
+  pecl install xdebug
+  ```
+  

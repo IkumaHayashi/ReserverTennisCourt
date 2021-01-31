@@ -8,6 +8,7 @@ require_once './model/FacilityConditionResercher.php';
 require_once './model/FacilityReservationConfirmer.php';
 require_once './model/ReservationInformation.php';
 require_once './model/CourtReserver.php';
+require_once './model/CourtLotteror.php';
 require_once './vendor/autoload.php';
 
 
@@ -20,11 +21,11 @@ $account = new Account('10008771','1125k');
 
     //設備の予約状況を取得して配列に格納
     
-    $court_condition_resercher = new FacilityConditionResercher($server_url,$start_url,$frame_name, new DateTime('2019-09-28'), '境川緑道公園テニスコート');
-    $table_values = array();
-    $table_values = $court_condition_resercher->get_facility_status();
-    var_dump($table_values);
-    $court_condition_resercher = null;
+    // $court_condition_resercher = new FacilityConditionResercher($server_url,$start_url,$frame_name, new DateTime('2019-09-28'), '境川緑道公園テニスコート');
+    // $table_values = array();
+    // $table_values = $court_condition_resercher->get_facility_status();
+    // var_dump($table_values);
+    // $court_condition_resercher = null;
     
 
     //アカウント指定して予約状況を取得して配列に格納
@@ -37,14 +38,12 @@ $account = new Account('10008771','1125k');
     */
     
     //予約
-    /*
-    $reservation_information = new ReservationInformation($account, '木ノ下テニスコート', array('第１コート（クレー）', '第２コート（クレー）'), new DateTime('2019-09-28 12:30:00'), 4
-                                                         , 'ハヤシ イクマ', '林 郁真', '080-5158-7732');
-    $court_reserver = new CourtReserver($server_url,$start_url,$frame_name, $reservation_information);
-    $court_reserver->reserve();
+    $reservation_information = new ReservationInformation($account, '岐阜ファミリーパークテニスコート', array('第１コート', '第２コート'), new DateTime('2021-03-07 12:30:00'), 4
+                                                         , 'タナカ ツカサ', '田中 僚', '090-8688-6773');
+    $court_lotteror = new CourtLotteror($server_url,$start_url,$frame_name, $reservation_information);
+    $court_lotteror->lottery();
     fgets(STDIN);
     $court_reserver = null;
-    */
 /*
 }catch (Exception $e) {
     
