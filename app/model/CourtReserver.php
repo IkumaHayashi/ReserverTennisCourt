@@ -41,7 +41,7 @@ Class CourtReserver extends BaseLogicOperator
         //予約コマがまだ存在すれば処理を再帰的に実行
         if(count($reserve_target_komas) > 0){
             $this->click_reserve_koma($reserve_target_komas);
-            $this->reserve_recursive();
+            //$this->reserve_recursive();
         }else{
             return;
         }
@@ -176,13 +176,14 @@ Class CourtReserver extends BaseLogicOperator
         // TODO: 抽選時と予約時でわける？
         //$dialog = $this->_driver->switchTo()->alert();
         // $dialog->accept();
-        var_dump("switch_main_frome;");
+        //var_dump("switch_main_frome;");
 
         //施設画面へ戻る
         $this->click_by_xpath('/html/body/form/div[2]/center/table[2]/tbody/tr[2]/td[2]/input');
 
         //再帰的に呼び出し
-        $this->click_reserve_koma($reserve_target_komas);
+        // TODO:一旦再帰的にやるのをやめる
+        //$this->click_reserve_koma($reserve_target_komas);
 
         //$element->te
         //取得したコマを1コートあたり2コマ、最大4コマずつクリック

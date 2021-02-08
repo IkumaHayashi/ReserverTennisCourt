@@ -15,6 +15,7 @@ Class BaseLogicOperator extends ChromeOperator
         $this->input_text_by_xpath('/html/body/form/div[2]/center/table[3]/tbody/tr[1]/td/input', $account->id);
         $this->input_text_by_xpath('/html/body/form/div[2]/center/table[3]/tbody/tr[2]/td/input', $account->password);
         $this->click_by_xpath('/html/body/form/div[2]/center/p/input[1]');
+        $this->waitUntilNextElementDisplayed(WebDriverBy::xpath('//*[@id="btnGoTop"]/input'));
         $this->click_by_xpath('//*[@id="btnGoTop"]/input');
     }
 

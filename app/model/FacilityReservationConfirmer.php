@@ -30,6 +30,14 @@ Class FacilityReservationConfirmer extends BaseLogicOperator
         $this->login($this->account);
         $this->display_reservation_table($from_date, $to_date);
         $this->store_table_to_array('/html/body/form/div[2]/center/div/table[2]', $table_values);
+        foreach ($table_values as $index => $row) {
+            if ($index === 0) {
+                array_unshift($row, "アカウント名");
+            } else {
+                array_unshift($row, $this->account->id);
+            }
+            $table_values[$index] = $row;
+        }
     }
     
 }

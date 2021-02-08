@@ -87,7 +87,7 @@ class ChromeOperator
     protected function waitUntilNextElementDisplayed(WebDriverBy $webDriverBy)
     {
         echo("[waitUntilNextElementDisplayed] START");
-        $this->_driver->wait(10, 500)->until(
+        $this->_driver->wait(60, 500)->until(
             WebDriverExpectedCondition::presenceOfElementLocated($webDriverBy)
         );
     }
@@ -200,7 +200,6 @@ class ChromeOperator
                 }
                 
             }
-             
             $table_values = array_merge($table_values, array($index++ => $row_values));
 
         }
