@@ -23,9 +23,9 @@ $frame_name = 'MainFrame';
     $accounts[] = new Account('10008771','1125k'); 
     $accounts[] = new Account('10001685','1125'); 
     $accounts[] = new Account('10008751','1125k'); 
-    $accounts[] = new Account('10008769','1125k'); 
-    $accounts[] = new Account('10009221','kinka51'); 
-    $accounts[] = new Account('10009280','a10009280');
+    // $accounts[] = new Account('10008769','1125k'); 
+    // $accounts[] = new Account('10009221','kinka51'); 
+    // $accounts[] = new Account('10009280','a10009280');
 
     //設備の予約状況を取得して配列に格納
     
@@ -56,46 +56,78 @@ $frame_name = 'MainFrame';
     
     
     //予約
-    $account = new Account('10006770','1125'); 
-    $reservation_information = new ReservationInformation($account, '岐阜ファミリーパークテニスコート', array('第３コート', '第４コート'), new DateTime('2021-03-13 12:30:00'), 2
-         , 'タナカ ツカサ', '田中 僚', '090-8688-6773');
-    $court_reserver = new CourtReserver($server_url,$start_url,$frame_name, $reservation_information);
-    $court_reserver->reserve();
-    $court_reserver = null;
+    // $account = new Account('10006770','1125'); 
+    // $reservation_information = new ReservationInformation($account, '岐阜ファミリーパークテニスコート', array('第３コート', '第４コート'), new DateTime('2021-03-13 12:30:00'), 2
+    //      , 'タナカ ツカサ', '田中 僚', '090-8688-6773');
+    // $court_reserver = new CourtReserver($server_url,$start_url,$frame_name, $reservation_information);
+    // $court_reserver->reserve();
+    // $court_reserver = null;
 
     // 抽選
-    // foreach ($accounts as $account) {
-    //     $reservation_informations[] = new ReservationInformation($account, '岐阜ファミリーパークテニスコート', array('第３コート', '第４コート'), new DateTime('2021-03-13 12:30:00'), 2
-    //     , 'タナカ ツカサ', '田中 僚', '090-8688-6773');
-    //     $reservation_informations[] = new ReservationInformation($account, '岐阜ファミリーパークテニスコート', array('第３コート', '第４コート'), new DateTime('2021-03-13 14:30:00'), 2
-    //     , 'タナカ ツカサ', '田中 僚', '090-8688-6773');
-    //     $reservation_informations[] = new ReservationInformation($account, '木ノ下テニスコート', array('第６コート（人工芝）', '第７コート（人工芝）'), new DateTime('2021-03-21 12:30:00'), 2
-    //     , 'タナカ ツカサ', '田中 僚', '090-8688-6773');
-    //     $reservation_informations[] = new ReservationInformation($account, '木ノ下テニスコート', array('第６コート（人工芝）', '第７コート（人工芝）'), new DateTime('2021-03-21 14:30:00'), 2
-    //     , 'タナカ ツカサ', '田中 僚', '090-8688-6773');
-    //     $reservation_informations[] = new ReservationInformation($account, '境川緑道公園テニスコート', array('Ａ面', 'Ｂ面'), new DateTime('2021-03-28 12:30:00'), 2
-    //     , 'タナカ ツカサ', '田中 僚', '090-8688-6773');
-    //     $reservation_informations[] = new ReservationInformation($account, '境川緑道公園テニスコート', array('Ａ面', 'Ｂ面'), new DateTime('2021-03-28 14:30:00'), 2
-    //     , 'タナカ ツカサ', '田中 僚', '090-8688-6773');
-    //     $reservation_informations[] = new ReservationInformation($account, '境川緑道公園テニスコート', array('Ｃ面', 'Ｄ面'), new DateTime('2021-03-28 12:30:00'), 2
-    //     , 'タナカ ツカサ', '田中 僚', '090-8688-6773');
-    //     $reservation_informations[] = new ReservationInformation($account, '境川緑道公園テニスコート', array('Ｃ面', 'Ｄ面'), new DateTime('2021-03-28 14:30:00'), 2
-    //     , 'タナカ ツカサ', '田中 僚', '090-8688-6773');
-    //     $reservation_informations[] = new ReservationInformation($account, '境川緑道公園テニスコート', array('Ａ面', 'Ｂ面'), new DateTime('2021-03-21 12:30:00'), 2
-    //     , 'タナカ ツカサ', '田中 僚', '090-8688-6773');
-    //     $reservation_informations[] = new ReservationInformation($account, '境川緑道公園テニスコート', array('Ａ面', 'Ｂ面'), new DateTime('2021-03-21 14:30:00'), 2
-    //     , 'タナカ ツカサ', '田中 僚', '090-8688-6773');
-    //     $reservation_informations[] = new ReservationInformation($account, '境川緑道公園テニスコート', array('Ｃ面', 'Ｄ面'), new DateTime('2021-03-21 12:30:00'), 2
-    //     , 'タナカ ツカサ', '田中 僚', '090-8688-6773');
-    //     $reservation_informations[] = new ReservationInformation($account, '境川緑道公園テニスコート', array('Ｃ面', 'Ｄ面'), new DateTime('2021-03-21 14:30:00'), 2
-    //     , 'タナカ ツカサ', '田中 僚', '090-8688-6773');
-    //     foreach ($reservation_informations as $reservation_information) {
-    //         $court_lotteror = new CourtLotteror($server_url,$start_url,$frame_name, $reservation_information);
-    //         $court_lotteror->lottery();
-    //         $court_lotteror = null;
-    //     }
-    //     $reservation_informations = [];
-    // }
+    foreach ($accounts as $account) {
+        $reservation_informations[] = new ReservationInformation($account, '境川緑道公園テニスコート', array('Ａ面', 'Ｂ面'), new DateTime('2021-04-03 12:30:00'), 2
+        , 'タナカ ツカサ', '田中 僚', '090-8688-6773');
+        $reservation_informations[] = new ReservationInformation($account, '境川緑道公園テニスコート', array('Ａ面', 'Ｂ面'), new DateTime('2021-04-03 14:30:00'), 2
+        , 'タナカ ツカサ', '田中 僚', '090-8688-6773');
+        $reservation_informations[] = new ReservationInformation($account, '境川緑道公園テニスコート', array('Ａ面', 'Ｂ面'), new DateTime('2021-04-04 12:30:00'), 2
+        , 'タナカ ツカサ', '田中 僚', '090-8688-6773');
+        $reservation_informations[] = new ReservationInformation($account, '境川緑道公園テニスコート', array('Ａ面', 'Ｂ面'), new DateTime('2021-04-04 14:30:00'), 2
+        , 'タナカ ツカサ', '田中 僚', '090-8688-6773');
+        $reservation_informations[] = new ReservationInformation($account, '境川緑道公園テニスコート', array('Ａ面', 'Ｂ面'), new DateTime('2021-04-10 12:30:00'), 2
+        , 'タナカ ツカサ', '田中 僚', '090-8688-6773');
+        $reservation_informations[] = new ReservationInformation($account, '境川緑道公園テニスコート', array('Ａ面', 'Ｂ面'), new DateTime('2021-04-10 14:30:00'), 2
+        , 'タナカ ツカサ', '田中 僚', '090-8688-6773');
+        $reservation_informations[] = new ReservationInformation($account, '境川緑道公園テニスコート', array('Ｃ面', 'Ｄ面'), new DateTime('2021-04-11 12:30:00'), 2
+        , 'タナカ ツカサ', '田中 僚', '090-8688-6773');
+        $reservation_informations[] = new ReservationInformation($account, '境川緑道公園テニスコート', array('Ｃ面', 'Ｄ面'), new DateTime('2021-04-11 14:30:00'), 2
+        , 'タナカ ツカサ', '田中 僚', '090-8688-6773');
+        $reservation_informations[] = new ReservationInformation($account, '境川緑道公園テニスコート', array('Ｃ面', 'Ｄ面'), new DateTime('2021-04-17 12:30:00'), 2
+        , 'タナカ ツカサ', '田中 僚', '090-8688-6773');
+        $reservation_informations[] = new ReservationInformation($account, '境川緑道公園テニスコート', array('Ｃ面', 'Ｄ面'), new DateTime('2021-04-17 14:30:00'), 2
+        , 'タナカ ツカサ', '田中 僚', '090-8688-6773');
+        $reservation_informations[] = new ReservationInformation($account, '境川緑道公園テニスコート', array('Ａ面', 'Ｂ面'), new DateTime('2021-04-18 12:30:00'), 2
+        , 'タナカ ツカサ', '田中 僚', '090-8688-6773');
+        $reservation_informations[] = new ReservationInformation($account, '境川緑道公園テニスコート', array('Ａ面', 'Ｂ面'), new DateTime('2021-04-18 14:30:00'), 2
+        , 'タナカ ツカサ', '田中 僚', '090-8688-6773');
+        $reservation_informations[] = new ReservationInformation($account, '境川緑道公園テニスコート', array('Ａ面', 'Ｂ面'), new DateTime('2021-04-24 12:30:00'), 2
+        , 'タナカ ツカサ', '田中 僚', '090-8688-6773');
+        $reservation_informations[] = new ReservationInformation($account, '境川緑道公園テニスコート', array('Ａ面', 'Ｂ面'), new DateTime('2021-04-24 14:30:00'), 2
+        , 'タナカ ツカサ', '田中 僚', '090-8688-6773');
+        $reservation_informations[] = new ReservationInformation($account, '境川緑道公園テニスコート', array('Ａ面', 'Ｂ面'), new DateTime('2021-04-25 12:30:00'), 2
+        , 'タナカ ツカサ', '田中 僚', '090-8688-6773');
+        $reservation_informations[] = new ReservationInformation($account, '境川緑道公園テニスコート', array('Ａ面', 'Ｂ面'), new DateTime('2021-04-25 14:30:00'), 2
+        , 'タナカ ツカサ', '田中 僚', '090-8688-6773');
+        $reservation_informations[] = new ReservationInformation($account, '境川緑道公園テニスコート', array('Ａ面', 'Ｂ面'), new DateTime('2021-04-29 12:30:00'), 2
+        , 'タナカ ツカサ', '田中 僚', '090-8688-6773');
+        $reservation_informations[] = new ReservationInformation($account, '境川緑道公園テニスコート', array('Ａ面', 'Ｂ面'), new DateTime('2021-04-29 14:30:00'), 2
+        , 'タナカ ツカサ', '田中 僚', '090-8688-6773');
+        // $reservation_informations[] = new ReservationInformation($account, '木ノ下テニスコート', array('第６コート（人工芝）', '第７コート（人工芝）'), new DateTime('2021-03-21 12:30:00'), 2
+        // , 'タナカ ツカサ', '田中 僚', '090-8688-6773');
+        // $reservation_informations[] = new ReservationInformation($account, '木ノ下テニスコート', array('第６コート（人工芝）', '第７コート（人工芝）'), new DateTime('2021-03-21 14:30:00'), 2
+        // , 'タナカ ツカサ', '田中 僚', '090-8688-6773');
+        // $reservation_informations[] = new ReservationInformation($account, '境川緑道公園テニスコート', array('Ａ面', 'Ｂ面'), new DateTime('2021-03-28 12:30:00'), 2
+        // , 'タナカ ツカサ', '田中 僚', '090-8688-6773');
+        // $reservation_informations[] = new ReservationInformation($account, '境川緑道公園テニスコート', array('Ａ面', 'Ｂ面'), new DateTime('2021-03-28 14:30:00'), 2
+        // , 'タナカ ツカサ', '田中 僚', '090-8688-6773');
+        // $reservation_informations[] = new ReservationInformation($account, '境川緑道公園テニスコート', array('Ｃ面', 'Ｄ面'), new DateTime('2021-03-28 12:30:00'), 2
+        // , 'タナカ ツカサ', '田中 僚', '090-8688-6773');
+        // $reservation_informations[] = new ReservationInformation($account, '境川緑道公園テニスコート', array('Ｃ面', 'Ｄ面'), new DateTime('2021-03-28 14:30:00'), 2
+        // , 'タナカ ツカサ', '田中 僚', '090-8688-6773');
+        // $reservation_informations[] = new ReservationInformation($account, '境川緑道公園テニスコート', array('Ａ面', 'Ｂ面'), new DateTime('2021-03-21 12:30:00'), 2
+        // , 'タナカ ツカサ', '田中 僚', '090-8688-6773');
+        // $reservation_informations[] = new ReservationInformation($account, '境川緑道公園テニスコート', array('Ａ面', 'Ｂ面'), new DateTime('2021-03-21 14:30:00'), 2
+        // , 'タナカ ツカサ', '田中 僚', '090-8688-6773');
+        // $reservation_informations[] = new ReservationInformation($account, '境川緑道公園テニスコート', array('Ｃ面', 'Ｄ面'), new DateTime('2021-03-21 12:30:00'), 2
+        // , 'タナカ ツカサ', '田中 僚', '090-8688-6773');
+        // $reservation_informations[] = new ReservationInformation($account, '境川緑道公園テニスコート', array('Ｃ面', 'Ｄ面'), new DateTime('2021-03-21 14:30:00'), 2
+        // , 'タナカ ツカサ', '田中 僚', '090-8688-6773');
+        foreach ($reservation_informations as $reservation_information) {
+            $court_lotteror = new CourtLotteror($server_url,$start_url,$frame_name, $reservation_information);
+            $court_lotteror->lottery();
+            $court_lotteror = null;
+        }
+        $reservation_informations = [];
+    }
 /*
 }catch (Exception $e) {
     
