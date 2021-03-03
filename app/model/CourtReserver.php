@@ -149,7 +149,7 @@ Class CourtReserver extends BaseLogicOperator
         }
 
         //次へボタンをクリック
-        $this->click_by_xpath('/html/body/form/div[2]/div[2]/left/table[2]/tbody/tr[2]/td/input[1]');
+        $this->click_by_xpath('/html/body/form/div[2]/div[2]/left/left/table[2]/tbody/tr[2]/td/input[1]');
         
         //責任者情報を入力
         $element = $this->get_element_by_xpath('/html/body/form/div[2]/div/table/tbody/tr/td/table/tbody/tr[6]/td/input');
@@ -166,7 +166,7 @@ Class CourtReserver extends BaseLogicOperator
         $this->select_by_visible_text('/html/body/form/div[2]/div/table/tbody/tr[2]/td[5]/select[2]', '04：ソフトテニス');
 
         //次へボタンクリック
-        $this->click_by_xpath('/html/body/form/div[2]/table[3]/tbody/tr[1]/td[2]/input');
+        $this->click_by_xpath('/html/body/form/div[2]/table[3]/tbody/tr/td[2]/table/tbody/tr[2]/td/input');
 
         //予約ボタンをクリック
         $this->click_by_xpath('/html/body/form/div[2]/center/center/input[1]');
@@ -174,9 +174,8 @@ Class CourtReserver extends BaseLogicOperator
         $dialog->accept();
 
         // TODO: 抽選時と予約時でわける？
-        //$dialog = $this->_driver->switchTo()->alert();
-        // $dialog->accept();
-        //var_dump("switch_main_frome;");
+        $dialog = $this->_driver->switchTo()->alert();
+        $dialog->accept();
 
         //施設画面へ戻る
         $this->click_by_xpath('/html/body/form/div[2]/center/table[2]/tbody/tr[2]/td[2]/input');
@@ -211,7 +210,7 @@ Class CourtReserver extends BaseLogicOperator
     private function get_court_name_tr_element(string $court_name)
     {
         //コート名が記載されているthタグを取得
-        $th_tag_elements = $this->get_elements_by_tag_class_and_text('/html/body/form/div[2]/div[2]/left/table[3]/tbody/tr/td/table','th','clsShisetuTitleOneDay', $court_name);
+        $th_tag_elements = $this->get_elements_by_tag_class_and_text('/html/body/form/div[2]/div[2]/left/left/table[3]','th','clsShisetuTitleOneDay', $court_name);
         if($th_tag_elements == null || count($th_tag_elements) == 0 || count($th_tag_elements) > 1){
             throw new \RuntimeException('コート名に対応するth要素が0件もしくは2件以上見つかりました。');
         }

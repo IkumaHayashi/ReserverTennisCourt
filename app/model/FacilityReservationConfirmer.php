@@ -39,5 +39,24 @@ Class FacilityReservationConfirmer extends BaseLogicOperator
             $table_values[$index] = $row;
         }
     }
+
+    public function cancel($date)
+    {
+        $this->login($this->account);
+
+        // 日時で絞り込み
+        $this->display_reservation_table($date, $date);
+
+        // 一括取消チェックボックスをチェック
+        $this->click_element_by_tag_class_and_text('/html/body/form/div[2]/center/div/table[2]', 'input', 'clsChk', '');
+
+        // 一括取消ボタンクリック
+        $this->click_by_xpath('/html/body/form/div[2]/center/div/table[1]/tbody/tr/td[3]/input');
+
+        // ダイアログでOKをクリック
+        $dialog = $this->_driver->switchTo()->alert();
+        $dialog->accept();
+
+    }
     
 }
