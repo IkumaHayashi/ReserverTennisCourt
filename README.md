@@ -38,5 +38,5 @@
   ```
 - たまったchromedriveのプロセスをkill
   ```
-  ps ax | grep webdriver | grep -v grep | awk '{ print "kill -9", $2 }' | sh
+  ps ax | grep webdriver | grep -v grep | awk '{ print "kill -9", $1 }' | sh
   ```
