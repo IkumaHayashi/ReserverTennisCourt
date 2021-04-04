@@ -48,7 +48,13 @@ Class FacilityReservationConfirmer extends BaseLogicOperator
         $this->display_reservation_table($date, $date);
 
         // 一括取消チェックボックスをチェック
-        $this->click_element_by_tag_class_and_text('/html/body/form/div[2]/center/div/table[2]', 'input', 'clsChk', '');
+        try {
+            $this->click_elements_by_tag_class_and_text('/html/body/form/div[2]/center/div/table[2]', 'input', 'clsChk', '');
+        } catch (Exception $ex) {
+            print_r("予約が入っていませんでした。" . PHP_EOL);
+            print_r($this->account);
+            return;
+        }
 
         // 一括取消ボタンクリック
         $this->click_by_xpath('/html/body/form/div[2]/center/div/table[1]/tbody/tr/td[3]/input');

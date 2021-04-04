@@ -144,6 +144,23 @@ class ChromeOperator
 
     }
 
+    /**
+     * 一致するクラス名、テキストをクリック。なければエラーを投げる。
+     */
+    protected function click_elements_by_tag_class_and_text(string $parent_element_xpath, string $tag_name, string $class_name, string $text)
+    {
+
+        $target_elements = $this->get_elements_by_tag_class_and_text($parent_element_xpath, $tag_name, $class_name, $text);
+        if (count($target_elements) === 0) {
+            throw new \RuntimeException("対象のDOMが取得できませんでした。 parent_element_xpath: $parent_element_xpath tag_name: $tag_name , class_name: $class_name , text: $text");
+        }
+        foreach ($target_elements as $element) {
+            if ($element->getText() === $text) {
+                $element->click();
+            }
+        }
+    }
+
     protected function select_by_visible_text($select_xpath, $value)
     {
         $select = new WebDriverSelect($this->get_element_by_xpath($select_xpath));
