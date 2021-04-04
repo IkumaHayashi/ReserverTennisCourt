@@ -55,11 +55,17 @@ Class BaseLogicOperator extends ChromeOperator
     protected function get_facility_start_datetime()
     {
         //日付を取得
+        // 予約
         $date_th_element = $this->_driver->findElement(WebDriverBy::xpath('/html/body/form/div[2]/div[2]/left/left/table[3]/tbody/tr[1]/td[2]/table/tbody/tr/th[2]'));
+        // 抽選
+        // $date_th_element = $this->_driver->findElement(WebDriverBy::xpath('/html/body/form/div[2]/div[2]/left/table[3]/tbody/tr/td/table/tbody/tr[1]/td[2]/table/tbody/tr/th[2]'));
         $date_text = preg_replace("/（.+?）/", "",$date_th_element->getText());
 
         //時間を取得
+        //予約
         $start_time_td_element = $this->_driver->findElement(WebDriverBy::xpath('/html/body/form/div[2]/div[2]/left/left/table[3]/tbody/tr[2]/td[1]'));
+        //抽選
+        //$start_time_td_element = $this->_driver->findElement(WebDriverBy::xpath('/html/body/form/div[2]/div[2]/left/table[3]/tbody/tr/td/table/tbody/tr[2]/td[1]'));
         $time_text = $start_time_td_element->getText();
         
         //DateTime型にして返す
