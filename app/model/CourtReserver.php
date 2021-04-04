@@ -160,7 +160,7 @@ Class CourtReserver extends BaseLogicOperator
         $this->rewrite_text_field($element,$this->reservation_information->representative_telnumber);
         
         //次へボタンクリック
-        $this->click_by_xpath('/html/body/form/div[2]/table[3]/tbody/tr/td[2]/input[1]');
+        $this->click_by_xpath('/html/body/form/div[2]/table[3]/tbody/tr[1]/td[2]/input');
 
         //利用目的小分類からソフトテニスをクリック
         $this->select_by_visible_text('/html/body/form/div[2]/div/table/tbody/tr[2]/td[5]/select[2]', '04：ソフトテニス');
@@ -173,7 +173,7 @@ Class CourtReserver extends BaseLogicOperator
         $dialog = $this->_driver->switchTo()->alert();
         $dialog->accept();
 
-        // TODO: 抽選時と予約時でわける？
+        // TODO: 抽選時と予約時でわける。抽選時は不要だけど予約時は必要。
         $dialog = $this->_driver->switchTo()->alert();
         $dialog->accept();
 
